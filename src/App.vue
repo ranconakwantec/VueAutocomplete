@@ -1,28 +1,48 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-app>
+    <v-card>
+    <v-container fluid>
+      <v-row
+        align="center"
+      >
+        <v-col cols="12">
+          <v-autocomplete
+            v-model="values"
+            :items="items"
+            outlined
+            dense
+
+            label="Search"
+          ></v-autocomplete>
+        </v-col>
+
+      </v-row>
+    </v-container>
+  </v-card>
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
   name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+  issues:[],
+  data: () => ({
+          items: ["asd","asdw"],
+      values: ['foo', 'bar'],
+      value: null,
+  }),
+    created() {
+    this.getIssues();
+  },
+  methods: {
+    filterIssues() {
+      console.log(this.issues);
+    },
+    getIssues() {
+     return fetch('https://api.github.com/repos/facebook/react/issues')
+        .then((resp) => resp.json())
+        .then(async (json_data) => (this.items = json_data.map((issue)=>{return issue.title})));
+    },
+  },
+};
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
